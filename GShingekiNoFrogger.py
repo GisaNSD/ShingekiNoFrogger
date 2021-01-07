@@ -18,20 +18,55 @@ pygame.mixer.music.load('sound/AttackOnTitan.wav')
 pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(0.2)
 
+class Eren(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('images/Eren/eren_stands.png').convert()
+        self.image.set_colorkey(BLACK)
+        self.rect= self.image.get_rect()
+        self.rect.centerx = 80
+        self.rect.bottom= 420
+        self.speed_x = 0
+    
+    def update(self):
+        self.speed_x= 0
+        keystate= pygame.key.get_pressed()
+        if keystate[pygame.K_LEFT]:
+            self.speed_x= -5
+        if keystate[pygame.K_RIGHT]:
+            self.speed_x= 5
+        self.rect.x += self.speed_x
 
+        if self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        if self.rect.left < 0:
+            self.rect.left = 0
 
+all_sprites = pygame.sprite.Group()
+
+eren= Eren()
+all_sprites.add(eren)
 
 execute= True
 
+####################################################################################
+
 while execute:
 
+    CLOCK.tick(40)
     SCREEN.blit(background, (0, 0))   
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             execute= False
+        keystate= pygame.key.get_pressed()
+        if keystate[pygame.K_ESCAPE]:
+            execute= False
+    
+    all_sprites.update()
 
-    pygame.display.update()
+    all_sprites.draw(SCREEN)
+    pygame.display.flip()
 
 pygame.quit()
 
