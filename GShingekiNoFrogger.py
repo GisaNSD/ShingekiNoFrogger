@@ -42,10 +42,34 @@ class Eren(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
 
+
+class Titan(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('images/Titans/annie.png').convert()
+        self.image.set_colorkey(BLACK)
+        self.rect= self.image.get_rect()
+        self.rect.centerx = 800
+        self.rect.bottom= 420
+        self.speed_x = 0
+
+    def update(self):
+        self.rect.centerx -= 3
+
 all_sprites = pygame.sprite.Group()
 
 eren= Eren()
+titan_list= pygame.sprite.Group()
 all_sprites.add(eren)
+
+
+for i in range(20):
+    titan= Titan()
+    titan.rect.x= random.randrange(1,800)
+    titan.rect.y= 210
+
+    titan_list.add(titan)
+    all_sprites.add(titan)
 
 execute= True
 
@@ -63,6 +87,8 @@ while execute:
         if keystate[pygame.K_ESCAPE]:
             execute= False
     
+    titanCollision= pygame.sprite.spritecollide(eren, titan_list, True)
+
     all_sprites.update()
 
     all_sprites.draw(SCREEN)
